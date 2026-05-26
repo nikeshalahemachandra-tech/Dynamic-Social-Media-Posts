@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Dynamic Social Media Posts</title>
+  <style>
+    /*
+     * CSS Styles for the social media post.
+     * This section controls the visual appearance of the HTML elements.
+     */
+    body {
+      background-color: #e6ecf0; /* A soft, light blue-grey background */
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .post-container {
+      background-color: #ffffff; /* White background for the post card */
+      border: 1px solid #e1e8ed; /* Subtle border for definition */
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Soft shadow for depth */
+      padding: 24px;
+      margin: 20px auto; /* Centers the post on the page */
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .user-info {
+      display: flex; /* Uses Flexbox for alignment */
+      align-items: center; /* Vertically centers the items */
+      margin-bottom: 12px;
+    }
+
+    .user-info img {
+      border-radius: 50%; /* Makes the profile image a circle */
+      margin-right: 12px;
+    }
+
+    .username {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #1c2732;
+    }
+
+    .post-content {
+      color: #1c2732;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 16px; /* Adds space between the buttons */
+      margin-top: 16px;
+    }
+
+    .like-button, .comment-button, .share-button {
+      background-color: #ffffff;
+      color: #657786; /* Grey color for button text */
+      padding: 10px 20px;
+      border: 1px solid #e1e8ed;
+      border-radius: 24px;
+      cursor: pointer; /* Changes the cursor to a pointer on hover */
+      transition: background-color 0.2s ease, transform 0.1s ease; /* Smooth hover and click effects */
+      font-size: 1em;
+      display: flex;
+      align-items: center;
+    }
+
+    .like-button:hover, .comment-button:hover, .share-button:hover  {
+      background-color: #f0f2f5;
+    }
+    
+    .like-button:active, .comment-button:active, .share-button:active {
+      transform: scale(0.98); /* Adds a subtle press effect */
+    }
+
+    .like-count, .comment-count {
+      margin-left: 5px;
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  
+  <h1>Dynamic Social Media Posts</h1>
+  <div id="posts-container">
+    <!-- Posts will be rendered here by JavaScript -->
+  </div>
+
+  <script>
+    /*
+     * JavaScript for creating and rendering dynamic components.
+     * This script demonstrates how to create a reusable PostComponent function.
+     */
+
+    // Sample data to simulate posts from an API or database.
+    const postsData = [
+      {
+        id: 1,
+        author: 'Alex Johnson',
+        avatar: 'https://placehold.co/50x50/3498db/ffffff?text=A',
+        content: 'Just started learning about web technologies for my CIT344 course. So excited to apply what I\'m learning! #WebDev #CIT344',
+        likes: 12,
+        comments: 5,
+        share:6
+       
+      },
+      {
+        id: 2,
+        author: 'Maria Garcia',
+        avatar: 'https://placehold.co/50x50/2ecc71/ffffff?text=M',
+        content: 'Building my first component-based UI. It feels so much more organized and scalable! Loving the component-based approach.',
+        likes: 24,
+        comments: 9,
+        share:7
+      },
+      {
+        id: 3,
+        author: 'Leo Chen',
+        avatar: 'https://placehold.co/50x50/e74c3c/ffffff?text=L',
+        content: 'The Virtual DOM is fascinating. It makes so much sense why frameworks use it for performance. This is a game-changer!',
+        likes: 31,
+        comments: 14,
+        share:4
+
+      },
+      {
+        id:4,
+        author:'Nikeshala Thirasarani',
+        avatar: 'https://placehold.co/50x50/2ecc71/ffffff?text=N',
+        content:'This is my first dynamic component!Loving the component-based approach.',
+        likes:30,
+        comments:10,
+        share:2
+      },
+
+    ];
+
+    /**
+     * A reusable component function that creates the HTML for a single post.
+     * This function takes postData as a prop (a data object) and returns a string of HTML.
+     * @param {object} postData - An object containing data for a single post.
+     * @returns {string} The HTML string for the post.
+     */
+    const PostComponent = (postData) => {
+      return `
+        <div class="post-container" data-post-id="${postData.id}">
+          <div class="user-info">
+            <img src="${postData.avatar}" alt="${postData.author}'s Avatar">
+            <h3 class="username">${postData.author}</h3>
+          </div>
+          <div class="post-content">
+            <p>${postData.content}</p>
+          </div>
+          <div class="post-actions">
+            <button class="like-button">👍 Like</button>
+            <span class="like-count">${postData.likes}</span>
+            <button class="comment-button">💬 Comment</button>
+            <span class="comment-count">${postData.comments}</span>
+            <button class="share-button"> <i class="fa fa-share-alt"></i> Share</button>
+            <span class="share-count">${postData.share || 0} </span>
+          </div>
+        </div>
+      `;
+    };
+
+    // A function to handle the dynamic rendering of all posts.
+    const renderPosts = () => {
+      const postsContainer = document.getElementById('posts-container');
+      
+      // Use the map function to generate an array of HTML strings
+      const postsHtml = postsData.map(post => PostComponent(post)).join('');
+      
+      // Inject the generated HTML into the container
+      postsContainer.innerHTML = postsHtml;
+    };
+
+    // Add event listeners to each post after rendering to handle interactivity.
+    const addEventListeners = () => {
+      document.querySelectorAll('.post-container').forEach(postElement => {
+        const likeButton = postElement.querySelector('.like-button');
+        const likeCountSpan = postElement.querySelector('.like-count');
+        const commentButton = postElement.querySelector('.comment-button');
+        const commentCountSpan = postElement.querySelector('.comment-count');
+        const shareButton = postElement.querySelector('.share-button');
+        const shareCountSpan = postElement.querySelector('.share-count');
+
+        // This is a simplified state management for the demo
+        let likeCount = parseInt(likeCountSpan.textContent);
+        let commentCount = parseInt(commentCountSpan.textContent);
+        let isLiked = false;
+
+        likeButton.addEventListener('click', () => {
+          isLiked = !isLiked;
+          if (isLiked) {
+            likeCount++;
+            likeButton.textContent = '💙 Liked';
+          } else {
+            likeCount--;
+            likeButton.textContent = '👍 Like';
+          }
+          likeCountSpan.textContent = likeCount;
+          
+        });
+
+        commentButton.addEventListener('click', () => {
+          commentCount++;
+          commentCountSpan.textContent = commentCount;
+        });
+
+       shareButton.addEventListener('click',  () => {
+        console.log('Share button was clocked!');
+        //we can make this do something more complex later!
+       });
+
+      });
+    };
+
+    // Run the functions when the document is ready.
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPosts();
+      addEventListeners();
+    });
+  </script>
+
+</body>
+</html>
